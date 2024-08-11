@@ -9,6 +9,13 @@ use App\Http\Controllers\SessionsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\MdController;
+use App\Http\Controllers\NurseController;
+use App\Http\Controllers\LaporanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,9 +32,9 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/', [HomeController::class, 'home']);
-	Route::get('dashboard', function () {
-		return view('dashboard');
-	})->name('dashboard');
+	Route::get('beranda', [BerandaController::class, 'index'])->name('beranda');
+
+	
 
 	Route::get('billing', function () {
 		return view('billing');
@@ -61,11 +68,50 @@ Route::group(['middleware' => 'auth'], function () {
 		return view('static-sign-up');
 	})->name('sign-up');
 
+
+    Route::get('coming',[BerandaController::class, 'coming'])->name('coming');
+	Route::get('transaksi', [TransaksiController::class, 'index']);
+	Route::get('setting', [SettingController::class, 'index']);
+	Route::get('pengguna', [PenggunaController::class ,'index']);
+	Route::get('daftar_transaksi', [TransaksiController::class, 'data_transaksi'])->name('daftar.transaksi');
+
+	Route::get('harian_transaksi', [TransaksiController::class, 'harian_transaksi'])->name('harian.transaksi');
+
+	Route::post('/transaksi', [TransaksiController::class, 'add_transaksi'])->name('add.transaksi');
+	Route::delete('/daftar_transaksi/{id}', [TransaksiController::class, 'del_transaksi'])->name('del.transaksi');
+	Route::get('/edit_transaksi/{id}/edit', [TransaksiController::class, 'edit_transaksi'])->name('edit.transaksi');
+	Route::put('/edit_transaksi/{id}', [TransaksiController::class, 'update_transaksi'])->name('update.transaksi');
+    
+    Route::get('laporan', [LaporanController::class, 'index'])->name('index.laporan');
+    Route::get('laporan_transaksi', [LaporanController::class, 'transaksi'])->name('laporan.transaksi');
+
+
+	Route::get('/md', [MdController::class,'index'])->name('md.index');
+	Route::get('/detail_md/{id_md}', [MdController::class, 'detail'])->name('md.detail');
+
+	Route::get('/perawat', [NurseController::class,'index'])->name('perawat.index');
+    Route::get('/detail_perawat/{id}', [NurseController::class, 'detail'])->name('perawat.detail');
+
+	Route::post('/pengguna', [PenggunaController::class, 'add_pengguna'])->name('add.pengguna');
+	Route::post('/pengguna/{user}/toggle-status', [PenggunaController::class, 'toggleStatus'])->name('toggle.status');
+
+	Route::post('/add_time', [SettingController::class, 'add_time'])->name('add.time');
+	Route::delete('/del_time/{id}', [SettingController::class, 'del_time'])->name('del.time');
+
+	Route::post('/add_type', [SettingController::class, 'add_type'])->name('add.type');
+	Route::delete('/del_type/{id}', [SettingController::class, 'del_type'])->name('del.type');
+    
+	Route::post('/add_method', [SettingController::class, 'add_method'])->name('add.method');
+	Route::delete('/del_method/{id}', [SettingController::class, 'del_method'])->name('del.method');
+
+	Route::post('/add_overtime', [SettingController::class, 'add_overtime'])->name('add.overtime');
+	Route::delete('/del_overtime/{id}', [SettingController::class, 'del_overtime'])->name('del.overtime');
+
     Route::get('/logout', [SessionsController::class, 'destroy']);
 	Route::get('/user-profile', [InfoUserController::class, 'create']);
 	Route::post('/user-profile', [InfoUserController::class, 'store']);
     Route::get('/login', function () {
-		return view('dashboard');
+		return view('beranda');
 	})->name('sign-up');
 });
 
